@@ -443,3 +443,43 @@ class Series extends Component{
 export default Series;
 
 ```
+
+
+### Loaderを表示
+- components/Loader/index.js
+```js
+
+import React from 'react'
+import loaderSrc from '../../assets/a.gif';
+
+const Loader = props => (
+  <img
+    alt="Loader icon"
+    src={loaderSrc} />
+);
+
+export default Loader;
+
+```
+
+- containers/Seriesでimport
+```js
+
+
+import Loader from '../../components/Loader';
+
+//条件付きの部分に埋め込み
+  {
+    !isFetching && series.length === 0 && seriesName.trim() !== ''
+    &&
+    <p>No TV series have been found with this name</p>
+  }
+  {
+    isFetching && <Loader />
+  }
+  {
+    !isFetching && <SeriesList list={this.state.series} />
+  }
+
+//これでfetchしているときの待機時間中にloadingがgifが表示される
+```
