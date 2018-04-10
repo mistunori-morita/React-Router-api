@@ -133,3 +133,41 @@ class App extends Component {
   //こうすることでThe length of series array - {this.state.series.length}で設定した場所に２秒後にlengthなので何個あるかが表示される
 ```
 
+### 非同期について
+- `npm install whatwg-fetch --save`のライブラリをnpmでインストール
+
+```js
+src/components/App/index.js
+
+import React, { Component } from 'react';
+import Intro from '../Intro';
+import './App.css';
+//先ほどのnpmをインストール
+import whatwg-fetch;
+
+```
+
+```js
+//ライスフサイクルメソッドのcomponentDidMount()を使って描画とにレンダリング
+
+componentDidMount(){
+  //responseに取得できると200番になってconsole.log()でオブジェクトが取得できる
+  fetch('http://api.tvmaze.com/search/shows?q=Vikings')
+    .then((response) => { console.log(response) })
+}
+
+//JSONの取得
+componentDidMount(){
+  fetch('http://api.tvmaze.com/search/shows?q=Vikings')
+    .then(response => response.json())
+    .then(json => console.log(json))
+}
+
+//取得したJSONをsetStateでセットする
+componentDidMount(){
+  fetch('http://api.tvmaze.com/search/shows?q=Vikings')
+    .then(response => response.json())
+    .then(json => this.setState({ series: json}))
+}
+```
+- この状態で最初にstateを宣言した配列の中にJSONが入ってきてsetStateされたものがレンダリングされる
