@@ -209,7 +209,7 @@ class App extends Component {
           <h1 className="App-title">TV Series List</h1>
         </header>
         <Intro message="you can find all of youre most loved series" />
-        //Seriesのコンポーネントにstateとライフサイクルをお引越ししてレンダリング
+        //Seriesのコンポーネントにstateとライフサイクルをお引越ししてレンダリングg
         <Series />
       </div>
     );
@@ -245,4 +245,73 @@ class Series extends Component{
 
 
 export default Series;
+```
+
+- components/SerisList/index.jsを作成
+- これをSeriesのコンポーネントにimport
+```js
+import React from 'react'
+
+const SeriesList = (props) => {
+  return (
+    <div>Series List component</div>
+  )
+}
+
+
+export default SeriesList;
+
+//Seriesコンポーネントはこんな感じ
+import React, { Component } from 'react';
+import SeriesList from '../../components/SeriesList';
+
+class Series extends Component{
+  state = {
+    series: []
+  }
+
+  componentDidMount() {
+    fetch('http://api.tvmaze.com/search/shows?q=Vikings')
+      .then(response => response.json())
+      .then(json => this.setState({ series: json }))
+  }
+
+  render() {
+    return(
+      <div>
+        The length of series array - {this.state.series.length}
+        //ここで子コンポーネントにpropsでアクセスできるようにstateのseriesを渡す
+        <SeriesList list={this.state.series} />
+      </div>
+    )
+  }
+}
+
+
+export default Series;
+
+
+//これを子コンポーネントでレンダリングするとpropsでアクセスできるので取得できる
+
+const SeriesList = (props) => {
+  return (
+    <div>
+     <ul>
+      //mapメソッドでレンダリング
+      //seriesのオブジェクトの中にアクセスして名前を表示させている
+       {props.list.map(series => (
+         <li>{series.show.name}</li>
+       ))}
+     </ul>
+    </div>
+  )
+}
+
+//これでapiの情報がレンダリングされて表示される
+//ただし、reactの場合はkeyがないと怒られるので、mapするとき含めてkeyと紐づける
+  <ul className="series-list">
+    {props.list.map(series => (
+      <li key={series.show.id}>{series.show.name}</li>
+    ))}
+  </ul>
 ```
