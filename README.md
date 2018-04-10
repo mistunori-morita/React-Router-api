@@ -378,3 +378,68 @@ return(
 
 //これによって入力したものが取得できるようになる
 ```
+
+### 条件付きレンダリング
+- apiの検索で表示できなかった（ヒットしなくて取得できないもの）場合の条件付きレンダリング
+```js
+import React, { Component } from 'react';
+import SeriesList from '../../components/SeriesList';
+
+class Series extends Component{
+  state = {
+    series: [],
+    //state状態を保持する為に追加する
+    seriesName: '',
+    isFetching: false
+  }
+
+  onInputChange = e =>{
+    //onChangeイベントの中でsetStateによってstateの状態を更新
+    this.setState({ seriesName: e.target.value, isFetching: true});
+
+    fetch(`http://api.tvmaze.com/search/shows?q=Viking${e.target.value}`)
+      .then(response => response.json())
+      //jsonが取得できた場合にisFetchingをfalseに更新して戻す
+      .then(json => this.setState({ series: json , isFetching: false }));
+      console.log(e.target.value); 
+  }
+
+  render() {
+    //変数の中にstateを入れる
+    const { series, seriesName, isFetching } = this.state;
+
+    return(
+      <div>
+        <div>
+          <input 
+            value={seriesName}
+            type="text" 
+            onChange={this.onInputChange} />
+        </div>
+        //条件つきでレンダリング
+        { 
+          //trimメソッドで空白を削除
+          series.length === 0 && seriesName.trim() === ''
+          &&
+          <p>Prease enter series name into the input</p>
+        }
+        {
+          series.length === 0 && seriesName.trim() !== ''
+          &&
+          <p>No TV series have been found with this name</p>
+        }
+        {
+          isFetching && <p>Loadding...</p>
+        }
+        {
+          !isFetching && <SeriesList list={this.state.series} />
+        }
+      </div>
+    )
+  }
+}
+
+
+export default Series;
+
+```
