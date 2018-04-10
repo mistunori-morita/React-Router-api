@@ -171,3 +171,78 @@ componentDidMount(){
 }
 ```
 - この状態で最初にstateを宣言した配列の中にJSONが入ってきてsetStateされたものがレンダリングされる
+
+
+### Containerについて
+src/containers/Series/index.jsを作成
+
+```js
+import React, { Component } from 'react'
+
+
+class Series extends Component{
+  render() {
+    return(
+      <div>Series container</div>
+    )
+  }
+}
+
+
+export default Series;
+
+
+//作ったコンポーネントをAppのindex.jsにインポート
+import React, { Component } from 'react';
+import Intro from '../Intro';
+//ここでimport
+import Series from '../../containers/Series';
+import './App.css';
+import 'whatwg-fetch';
+
+//修正を加える Appコンポーネント
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1 className="App-title">TV Series List</h1>
+        </header>
+        <Intro message="you can find all of youre most loved series" />
+        //Seriesのコンポーネントにstateとライフサイクルをお引越ししてレンダリング
+        <Series />
+      </div>
+    );
+  }
+}
+
+
+
+
+//Seriesコンポーネント
+import React, { Component } from 'react'
+
+
+class Series extends Component{
+  state = {
+    series: []
+  }
+
+  componentDidMount() {
+    fetch('http://api.tvmaze.com/search/shows?q=Vikings')
+      .then(response => response.json())
+      .then(json => this.setState({ series: json }))
+  }
+
+  render() {
+    return(
+      <div>
+        The length of series array - {this.state.series.length}
+      </div>
+    )
+  }
+}
+
+
+export default Series;
+```
