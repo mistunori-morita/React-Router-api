@@ -483,3 +483,68 @@ import Loader from '../../components/Loader';
 
 //これでfetchしているときの待機時間中にloadingがgifが表示される
 ```
+
+### react-routerの設定
+- `npm install --save react-router-dom`
+```js
+
+//ファイル直下のindex.js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './components/App/index';
+import registerServiceWorker from './registerServiceWorker';
+//BrowserRouterをインポート
+import { BrowserRouter } from 'react-router-dom';
+
+ReactDOM.render
+  (
+  //BrowserRouterでラップ
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+    ,document.getElementById('root')
+  );
+registerServiceWorker();
+
+```
+- components/Main
+```js
+import React from 'react'
+import { Switch, Router } from 'react-router-dom';
+import Series from '../../containers/Series';
+
+const Main = props =>(
+  <Switch>
+    <Router exact path="/" component={Series} />
+  </Switch>
+);
+
+export default Main;
+
+
+//Appを編集
+import React, { Component } from 'react';
+import Series from '../../containers/Series';
+import Main from '../Main';
+import './App.css';
+import 'whatwg-fetch';
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1 className="App-title">TV Series List</h1>
+        </header>
+        //ここをメインに変更
+        <Main />
+      </div>
+    );
+  }
+}
+
+export default App;
+
+
+```
