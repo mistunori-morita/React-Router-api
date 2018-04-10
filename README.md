@@ -511,12 +511,17 @@ registerServiceWorker();
 - components/Main
 ```js
 import React from 'react'
-import { Switch, Router } from 'react-router-dom';
+//Routeなので注意！Routerとついつい書いちゃう
+import { Switch, Route } from 'react-router-dom';
 import Series from '../../containers/Series';
+import SingleSeries from '../../containers/SingleSeries';
+
 
 const Main = props =>(
   <Switch>
-    <Router exact path="/" component={Series} />
+  //Routeなので注意！
+    <Route exact path="/" component={Series} />
+    <Route path="/series/:id" component={SingleSeries} />
   </Switch>
 );
 
@@ -545,6 +550,28 @@ class App extends Component {
 }
 
 export default App;
+
+
+```
+
+### Linkを設定
+- Linkを設定することで画面遷移ができる
+```js
+import React from 'react';
+import './index.css';
+import { Link } from 'react-router-dom';
+
+
+const SeriesListItem = ({ series }) => (
+  <li>
+  //ここでseries.show.idで設定したものがMainコンポーネントのRouteのpathに紐づく
+    <Link to={`/series/${series.show.id}`}>
+      {series.show.name}
+    </Link>
+  </li>
+
+)
+
 
 
 ```
