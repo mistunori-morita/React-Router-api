@@ -92,3 +92,44 @@ export default Intro;
 
 //こうすることでカスタムプロパティでpropsを渡して、Introコンポーネントでレンダリングできる
 ```
+
+### stateとライフサイクルについて
+```js
+
+
+class App extends Component {
+  //stateの設定
+  state = {
+    series : []
+  }
+
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1 className="App-title">TV Series List</h1>
+        </header>
+        <Intro message="you can find all of youre most loved series" />
+        The length of series array - {this.state.series.length}
+      </div>
+    );
+  }
+}
+
+//ライフサイクル
+class App extends Component {
+  state = {
+    series : []
+  }
+
+  componentDidMount(){
+    const series = ["Vikings", "Game of thrones"];
+    //setTimeoutで２秒後にthis.setStateで
+    //const series = ["Vikings", "Game of thrones"];をstateの[series]の配列にsetをしている
+    setTimeout( () => {
+      this.setState({ series: series });
+    }, 2000);
+  }
+  //こうすることでThe length of series array - {this.state.series.length}で設定した場所に２秒後にlengthなので何個あるかが表示される
+```
+
