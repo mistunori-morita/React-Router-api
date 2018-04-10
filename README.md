@@ -315,3 +315,66 @@ const SeriesList = (props) => {
     ))}
   </ul>
 ```
+
+### リファクタリング
+```js
+
+//functionコンポーネントで管理をもっと上手にする
+const SeriesListItem = ({ series }) => (
+  <li key={series.show.id}>{series.show.name}</li>
+)
+
+const SeriesList = (props) => {
+  return (
+    <div>
+     <ul className="series-list">
+       {props.list.map(series => (
+         //ここで呼び出す
+        <SeriesListItem series={series} 　key={series.show.id}/>
+       ))}
+     </ul>
+    </div>
+  )
+}
+
+
+```
+
+## formのインプットによるイベント
+- containers/Series/index.jsを編集
+```js
+
+//名前は好きなものでOKで　イベントを設定
+onInputChange = e =>{
+  console.log(e);
+  console.log(e.target.value); 
+}
+
+
+//省略 inputタグを作ってonChangeイベントを紐づける
+return(
+  <div>
+    The length of series array - {this.state.series.length}
+    <div>
+    //上で作成したeventをthis.xxxxで紐づける
+      <input type="text" onChange={this.onInputChange} />
+    </div>
+    <SeriesList list={this.state.series} />
+  </div>
+
+//これでchangeイベントが繋がる
+```
+- changeイベントの修正(入力したinputの文字をapiに紐づける)
+```js
+
+  onInputChange = e =>{
+    //jsの連結を使って紐づける`${e.target.value}`
+    fetch(`http://api.tvmaze.com/search/shows?q=Viking${e.target.value}`)
+      .then(response => response.json())
+      .then(json => this.setState({ series: json }))
+      //これで取れるので
+      console.log(e.target.value); 
+  }
+
+//これによって入力したものが取得できるようになる
+```
